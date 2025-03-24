@@ -81,6 +81,11 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator PlayVideoAndStartGame()
     {
+        while (startWindow.activeSelf)
+        {
+            yield return null;
+        }
+        
         videoRawImage.gameObject.SetActive(true);
         videoPlayer.Play();
 
