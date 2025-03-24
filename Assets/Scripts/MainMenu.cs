@@ -12,13 +12,27 @@ public class MainMenu : MonoBehaviour
     public RawImage videoRawImage;
     public Image transitionImage;
 
-    //Quit Window Elements
+    [Header("Start Window Variables")]
+    public GameObject startWindow;
+    public Image startOverlayBackground;
+    public RectTransform startPolaroid;
+    public RectTransform startOptionsWindow;
+
+    [Header("Start Window Speed")]
+    public float startOverlaySpeed = 1f;
+    public float startPolaroidSpeed = 1f;
+    public float startOptionsSpeed = 1f;
+
+    [Header("Quit Window Variables")]
+    public GameObject quitWindow;
+    public Image quitOverlayBackground;
     public RectTransform quitPolaroid;
     public RectTransform quitOptionsWindow;
 
-    //Start Window Elements
-    public RectTransform startPolaroid;
-    public RectTransform startOptionsWindow;
+    [Header("Quit Window Speed")]
+    public float quitOverlaySpeed = 1f;
+    public float quitPolaroidSpeed = 1f;
+    public float quitOptionsSpeed = 1f;
 
     private void Start()
     {
@@ -26,6 +40,9 @@ public class MainMenu : MonoBehaviour
         color.a = 0f;
         transitionImage.color = color;
         transitionImage.raycastTarget = false;
+
+        startWindow.SetActive(false);
+        quitWindow.SetActive(false);
     }
 
     public void PlayGame()
@@ -38,7 +55,29 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(QuitGame());
     }
 
-   
+   public void OnStartButton()
+    {
+        startWindow.SetActive(true);
+        StartCoroutine(AnimateStartWindow(true));
+    }
+
+    public void OnQuitButton()
+    {
+        quitWindow.SetActive(true);
+        StartCoroutine(AnimateQuitWindow(true));
+    }
+
+    public void OnCancelButton(bool isStartWindow)
+    {
+        if (isStartWindow)
+        {
+            StartCoroutine(AnimateStartWindow(false));
+        }
+        else
+        {
+            StartCoroutine(AnimateQuitWindow(false));
+        }
+    }
 
     private IEnumerator PlayVideoAndStartGame()
     {
@@ -89,5 +128,91 @@ public class MainMenu : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
     }
 
-    
+    private IEnumerator AnimateStartWindow(bool isOpening)
+    {
+        float targetOverlayAlpha = isOpening ? 0.85f : 0f;
+        float overlayAlpha = isOpening ? 0f : 0.85f;
+
+        float polaroidTargetX = isOpening ? -185f : -600f;
+        float optionsTargetX = isOpening ? 240f : 600f;
+
+        float overlayAnimationTime = 0f;
+        while (overlayAnimationTime < 1f)
+        {
+            overlayAnimationTime += Time.deltaTime * startOverlaySpeed;
+            Color overlayColor = startOverlayBackground.color;
+            overlayColor.a = Mathf.Lerp(overlayAlpha, targetOverlayAlpha, overlayAnimationTime);
+            startOverlayBackground.color = overlayColor;
+            yield return null;
+        }
+
+        float polaroidAnimationTime = 0f;
+        Vector2 initialPolaroidPosition = startPolaroid.anchoredPosition;
+        Vector2 targetPolaroidPosition = new Vector2(polaroidTargetX, startPolaroid.anchoredPosition.y);
+        while (polaroidAnimationTime < 1f)
+        {
+            polaroidAnimationTime += Time.deltaTime * startPolaroidSpeed;
+            startPolaroid.anchoredPosition = Vector2.Lerp(initialPolaroidPosition, targetPolaroidPosition, polaroidAnimationTime);
+            yield return null;
+        }
+
+        float optionsAnimationTime = 0f;
+        Vector2 initialOptionsPosition = startOptionsWindow.anchoredPosition;
+        Vector2 targetOptionsPosition = new Vector2(optionsTargetX, startOptionsWindow.anchoredPosition.y);
+        while (optionsAnimationTime < 1f)
+        {
+            optionsAnimationTime += Time.deltaTime * startOptionsSpeed;
+            startOptionsWindow.anchoredPosition = Vector2.Lerp(initialOptionsPosition, targetOptionsPosition, optionsAnimationTime);
+            yield return null;
+        }
+
+        if (!isOpening)
+        {
+            startWindow.SetActive(false);
+        }
+    }
+
+    private IEnumerator AnimateQuitWindow(bool isOpening)
+    {
+        float targetOverlayAlpha = isOpening ? 0.85f : 0f;
+        float overlayAlpha = isOpening ? 0f : 0.85f;
+
+        float polaroidTargetX = isOpening ? 185f : 600f;
+        float optionsTargetX = isOpening ? -225f : -580f;
+
+        float overlayAnimationTime = 0f;
+        while (overlayAnimationTime < 1f)
+        {
+            overlayAnimationTime += Time.deltaTime * quitOverlaySpeed;
+            Color overlayColor = quitOverlayBackground.color;
+            overlayColor.a = Mathf.Lerp(overlayAlpha, targetOverlayAlpha, overlayAnimationTime);
+            quitOverlayBackground.color = overlayColor;
+            yield return null;
+        }
+
+        float polaroidAnimationTime = 0f;
+        Vector2 initialPolaroidPosition = quitPolaroid.anchoredPosition;
+        Vector2 targetPolaroidPosition = new Vector2(polaroidTargetX, quitPolaroid.anchoredPosition.y);
+        while (polaroidAnimationTime < 1f)
+        {
+            polaroidAnimationTime += Time.deltaTime * quitPolaroidSpeed;
+            quitPolaroid.anchoredPosition = Vector2.Lerp(initialPolaroidPosition, targetPolaroidPosition, polaroidAnimationTime);
+            yield return null;
+        }
+
+        float optionsAnimationTime = 0f;
+        Vector2 initialOptionsPosition = quitOptionsWindow.anchoredPosition;
+        Vector2 targetOptionsPosition = new Vector2(optionsTargetX, quitOptionsWindow.anchoredPosition.y);
+        while (optionsAnimationTime < 1f)
+        {
+            optionsAnimationTime += Time.deltaTime * quitOptionsSpeed;
+            quitOptionsWindow.anchoredPosition = Vector2.Lerp(initialOptionsPosition, targetOptionsPosition, optionsAnimationTime);
+            yield return null;
+        }
+
+        if (!isOpening)
+        {
+            quitWindow.SetActive(false);
+        }
+    }
 }
