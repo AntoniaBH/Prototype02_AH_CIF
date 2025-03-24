@@ -62,7 +62,9 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
+        Debug.Log("Quit");
         Application.Quit();
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 
     private IEnumerator FadeFromBlack(float duration)
