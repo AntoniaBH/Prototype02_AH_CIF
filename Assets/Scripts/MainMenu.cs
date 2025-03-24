@@ -16,10 +16,4 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void LoadSM(string SettingsMenu)
-    {
-        Debug.Log("SettingsMenu:" + SettingsMenu);
-        SceneManager.LoadScene(SettingsMenu);
-    }
-
 }
