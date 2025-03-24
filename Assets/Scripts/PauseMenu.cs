@@ -9,6 +9,15 @@ public class PauseMenu : MonoBehaviour
     public static bool GameIsPaused = false;
 
     public GameObject pauseMenuUI;
+    public Image transitionImage;
+    void Start()
+    {
+        Color color = transitionImage.color;
+        color.a = 1f;
+        transitionImage.color = color;
+
+        StartCoroutine(FadeFromBlack(2f));
+    }
 
     void Update()
     {
@@ -55,5 +64,25 @@ public class PauseMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    private IEnumerator FadeFromBlack(float duration)
+    {
+        Color color = transitionImage.color;
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = 1 - Mathf.Clamp01(elapsedTime / duration);
+            transitionImage.color = color;
+            yield return null;
+        }
+
+        color.a = 0f;
+        transitionImage.color = color;
+
+        transitionImage.gameObject.SetActive(false);
+    }
+
 }
 
