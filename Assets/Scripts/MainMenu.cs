@@ -130,7 +130,6 @@ public class MainMenu : MonoBehaviour
 
         Debug.Log("Quit");
         Application.Quit();
-        UnityEditor.EditorApplication.isPlaying = false;
     }
 
     private IEnumerator AnimateStartWindow(bool isOpening)
